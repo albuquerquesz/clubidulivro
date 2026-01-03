@@ -56,8 +56,17 @@ export default function DailyProgressModal({
 
         const userData = userDoc.data();
         const currentBookPagesRead = userData.currentBookPagesRead || 0;
-        const newTotalRead = currentBookPagesRead + pagesReadToday;
-        const intensity = calculateIntensity(pagesReadToday, profile.dailyGoal);
+
+        const existingDailyPages = progressDoc.exists()
+          ? progressDoc.data().pagesRead || 0
+          : 0;
+        const totalPagesForToday = existingDailyPages + pagesReadFromInput;
+
+        const newTotalRead = currentBookPagesRead + pagesReadFromInput;
+        const intensity = calculateIntensity(
+          totalPagesForToday,
+          profile.dailyGoal
+        );
 
         transaction.set(progressDocRef, {
           userId: profile.id,
